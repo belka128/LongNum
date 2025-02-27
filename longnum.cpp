@@ -360,7 +360,11 @@ bool LongNumber::operator==(const LongNumber& other) const {
             CountIntegers == other.CountIntegers &&
             IsTheyEqual(BinaryRepresentation, other.BinaryRepresentation));
 }
-
+LongNumber LongNumber::operator-() const {
+    LongNumber res = *this;
+    res.sign = !sign;
+    return res;
+}
 
 
 void print_LN(const LongNumber& num) { //работает но не для мего больших чисел
@@ -405,15 +409,15 @@ LongNumber operator""_longnum (long double num) { //переводим в стр
 
 int main(){
     // LongNumber num2;
-    LongNumber x = 1462.3456_longnum;
-    LongNumber y("-12.123", 50); //число, точность
+    LongNumber x = -2.52173687_longnum;
+    LongNumber y("1.123", 50); //число, точность
     print_LN(x);
     print_LN(y);
     // print_LN(num);
     
     // print_LN(b);
     //LongNumber y = 1223.913_longnum;
-    LongNumber c = y - x;
+    LongNumber c = x + y;
     print_LN(c);
     
     return 0;

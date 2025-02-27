@@ -26,6 +26,9 @@ class LongNumber {
         LongNumber operator - (const LongNumber& other);
         LongNumber operator = (const LongNumber& other);
         bool operator == (const LongNumber& other) const;
+        LongNumber operator-() const;
+        
+        
 };
 
 void print_LN(const LongNumber& num);
