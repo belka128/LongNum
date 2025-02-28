@@ -1,29 +1,32 @@
 #include "longnum.hpp"
-
-bool IsTheyEqual(std::vector<char> a, std::vector<char> b){ //Проверка чисел на равенство(включая незначащие нули в конце)
-    int i = 0;
-    while (i < a.size() && i < b.size()){
+int IsTheyEqual(std::vector<char> a, std::vector<char> b){ //Проверка чисел на равенство(включая незначащие нули в конце)
+    size_t i = 0;
+    while (i < a.size() && i < b.size()){ // 0 - первый больше, 1 - второй больше, 2 - они равны
         if (a[i] != b[i]){
-            return false;
+            if (a[i] > b[i]){
+                return 0;
+            }else{
+                return 1;
+            }
         }
         i++;
     }
     if (i < a.size()){
         while (i < a.size()){
             if (a[i] != 0){
-                return false;
+                return 0;
             }
             i++;
         }
-    }else{
+    }else if(i < b.size()){
         while (i < b.size()){
             if (b[i] != 0){
-                return false;
+                return 1;
             }
             i++;
         }
     }
-    return true;
+    return 2;
 }
 
 std::vector<char> BinaryInterpritation(std::string num, int accuracy, int &countIntegers){
@@ -33,7 +36,6 @@ std::vector<char> BinaryInterpritation(std::string num, int accuracy, int &count
     }
     int len_num = num.size()-1;
     int integer = num.find('.');
-    int precision = len_num - integer;
     int count = 0;
     std::vector<char> NewNum; //вектор хранящий num посимвольно в 10ой СС
     for (char c : num){ //записываем строку в наш вектор
@@ -106,11 +108,10 @@ std::vector<char> BinaryInterpritation(std::string num, int accuracy, int &count
     return NumResult;
 }
 
-
 LongNumber::LongNumber():BinaryRepresentation(std::vector<char>()), CountIntegers(0), sign(0) {};//Если ничего не введут
 LongNumber::LongNumber(const std::string &num, int accuracy) //Если передается строка
-:CountIntegers(0), //должно меняться в функции, а так хз
-BinaryRepresentation(std::vector<char>()),
+:BinaryRepresentation(std::vector<char>()),
+CountIntegers(0),
 sign(0){    
     int c = 0;
     std::vector<char> bin = BinaryInterpritation(num, accuracy, c);  
@@ -121,12 +122,11 @@ sign(0){
     }
 };
 LongNumber::LongNumber(const std::vector<char> &num, int kolvoIntegers, int sign) //Если передается вектор в двоичной (для + и -)
-:CountIntegers(kolvoIntegers),
-BinaryRepresentation(num),
+:BinaryRepresentation(num),
+CountIntegers(kolvoIntegers),
 sign(sign){};
 
 LongNumber LongNumber::operator+(const LongNumber& other){
-    int Resultsign = this->sign; // записываем знак результата
     int lenNum1 = this->BinaryRepresentation.size(); //общая длина в 2ой СС
     int lenNum2 = other.BinaryRepresentation.size();
     int lenPrecision1 = lenNum1 - this->CountIntegers; //кол-во цифр в дробной части
@@ -293,7 +293,7 @@ LongNumber LongNumber::operator+(const LongNumber& other){
                     differencePrecisions++;
                 }
             }
-
+            
             int kolvoIntegers = 0;
             while (counter2 >= 0){ //считаем оставшиеся цифры
                 if (((this->BinaryRepresentation[counter1]) - (other.BinaryRepresentation[counter2]) + previous_ost) == -2){
@@ -321,7 +321,7 @@ LongNumber LongNumber::operator+(const LongNumber& other){
                         Result.push_back((this->BinaryRepresentation[i]) + previous_ost);
                         previous_ost = 0;
                     }else{
-                        Result.push_back(0);
+                        Result.push_back(1);
                         previous_ost = -1;
                     }
                     kolvoIntegers++;
@@ -333,7 +333,6 @@ LongNumber LongNumber::operator+(const LongNumber& other){
                 kolvoIntegers--;
             }
             reverse(Result.begin(), Result.end()); // готовый ответ
-            
             return(LongNumber(Result, kolvoIntegers, this->sign));
             
         }else{ // 1ое < 2ое
@@ -356,22 +355,55 @@ LongNumber LongNumber::operator=(const LongNumber& other) {
     return *this;
 }
 bool LongNumber::operator==(const LongNumber& other) const {
-    return (sign == other.sign &&
-            CountIntegers == other.CountIntegers &&
-            IsTheyEqual(BinaryRepresentation, other.BinaryRepresentation));
+    return sign == other.sign &&
+    CountIntegers == other.CountIntegers &&
+    BinaryRepresentation == other.BinaryRepresentation;
+}
+bool LongNumber::operator!=(const LongNumber& other) const {
+    return !(*this == other);
 }
 LongNumber LongNumber::operator-() const {
-    LongNumber res = *this;
-    res.sign = !sign;
-    return res;
+    return LongNumber(BinaryRepresentation, CountIntegers, !sign);
 }
 
+bool LongNumber::operator<(const LongNumber& other) const {
+    if (sign != other.sign) {
+        return sign > other.sign;
+    }else if(sign == 1){ //отрицательные
+        if (CountIntegers < other.CountIntegers){
+            return false;
+        }else if(CountIntegers > other.CountIntegers){
+            return true;
+        }
+        if (IsTheyEqual(BinaryRepresentation, other.BinaryRepresentation) == 0){
+            return true;
+        }else{
+            return false;
+        }
+    }else{ //положительные
+        if (CountIntegers < other.CountIntegers){
+            return true;
+        }else if(CountIntegers > other.CountIntegers){
+            return false;
+        }
+        if (IsTheyEqual(BinaryRepresentation, other.BinaryRepresentation) == 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    
+}
+bool LongNumber::operator>(const LongNumber& other) const {
+    return !(*this < other || *this == other);
+}
 
 void print_LN(const LongNumber& num) { //работает но не для мего больших чисел
     std::cout << "Двоичное представление: ";
     
-    for (int i = 0; i < num.BinaryRepresentation.size(); i++) {
-        if (i == num.CountIntegers){
+    for (size_t i = 0; i < num.BinaryRepresentation.size(); i++) {
+        if (i == static_cast<size_t>(num.CountIntegers)){
              std::cout << "."; // Разделяем целую и дробную часть
         }
         std::cout << (int)num.BinaryRepresentation[i];
@@ -388,7 +420,7 @@ void print_LN(const LongNumber& num) { //работает но не для ме�
     double fractionalPart = 0.0;
     double power = 0.5;
 
-    for (int i = num.CountIntegers; i < num.BinaryRepresentation.size(); i++) {
+    for (size_t i = static_cast<size_t>(num.CountIntegers); i < num.BinaryRepresentation.size(); i++) {
         fractionalPart += num.BinaryRepresentation[i] * power;
         power /= 2;
     }
@@ -404,21 +436,6 @@ LongNumber operator""_longnum (long double num) { //переводим в стр
     std::ostringstream oss;
     oss << num; // Записываем число в строку
     std::string str_num = oss.str(); // Получаем строку
+
     return(LongNumber(str_num, 100));
 };
-
-int main(){
-    // LongNumber num2;
-    LongNumber x = -2.52173687_longnum;
-    LongNumber y("1.123", 50); //число, точность
-    print_LN(x);
-    print_LN(y);
-    // print_LN(num);
-    
-    // print_LN(b);
-    //LongNumber y = 1223.913_longnum;
-    LongNumber c = x + y;
-    print_LN(c);
-    
-    return 0;
-}

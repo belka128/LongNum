@@ -7,7 +7,7 @@
 #include <iomanip> //точный вывод
 #include <stdbool.h>
 
-bool IsTheyEqual(std::vector<char> a, std::vector<char> b);
+int IsTheyEqual(std::vector<char> a, std::vector<char> b);
 std::vector<char> BinaryInterpritation(std::string num, int accuracy, int &countIntegers);
 
 class LongNumber {
@@ -21,13 +21,16 @@ class LongNumber {
         LongNumber();//Если ничего не введут
         LongNumber(const std::string &num, int accuracy); //Если передается строка
         LongNumber(const std::vector<char> &num, int kolvoIntegers, int sign);
+        LongNumber(const LongNumber& other) = default;
 
         LongNumber operator + (const LongNumber& other);
         LongNumber operator - (const LongNumber& other);
         LongNumber operator = (const LongNumber& other);
         bool operator == (const LongNumber& other) const;
+        bool operator != (const LongNumber& other) const;
+        bool operator<(const LongNumber& other) const;
+        bool operator>(const LongNumber& other) const;
         LongNumber operator-() const;
-        
         
 };
 
