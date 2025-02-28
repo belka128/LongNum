@@ -35,7 +35,18 @@ std::vector<char> BinaryInterpritation(std::string num, int accuracy, int &count
         num.erase(num.begin());
     }
     int len_num = num.size()-1;
-    int integer = num.find('.');
+    int integer = 0;
+    int flag = 0;
+    for (size_t i = 0; i < num.size(); i++){
+        if (num[i] == '.'){
+            flag = 1;
+            break;
+        }
+        integer++;
+    }
+    if (flag == 0){
+
+    }
     int count = 0;
     std::vector<char> NewNum; //вектор хранящий num посимвольно в 10ой СС
     for (char c : num){ //записываем строку в наш вектор
@@ -346,7 +357,7 @@ LongNumber LongNumber::operator-(const LongNumber& other){
     NotOther.sign = !other.sign;  
     return *this + NotOther;  // Вызываем сложение
 }
-LongNumber LongNumber::operator=(const LongNumber& other) {
+LongNumber LongNumber::operator=(const LongNumber& other){
     if (this != &other) {
         BinaryRepresentation = other.BinaryRepresentation;
         sign = other.sign;
@@ -365,6 +376,7 @@ bool LongNumber::operator!=(const LongNumber& other) const {
 LongNumber LongNumber::operator-() const {
     return LongNumber(BinaryRepresentation, CountIntegers, !sign);
 }
+
 
 bool LongNumber::operator<(const LongNumber& other) const {
     if (sign != other.sign) {
@@ -432,7 +444,7 @@ void print_LN(const LongNumber& num) { //работает но не для ме�
     std::cout << "Число в 10-ичной системе: " << std::setprecision(10) << result << std::endl;
 }
 
-LongNumber operator""_longnum (long double num) { //переводим в строку, точность = 100 || НЕ РАБОТАЕТ С ОТРИЦАТЕЛЬНЫМИ
+LongNumber operator""_longnum (long double num) { //переводим в строку, точность = 100
     std::ostringstream oss;
     oss << num; // Записываем число в строку
     std::string str_num = oss.str(); // Получаем строку

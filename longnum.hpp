@@ -31,8 +31,9 @@ class LongNumber {
         bool operator<(const LongNumber& other) const;
         bool operator>(const LongNumber& other) const;
         LongNumber operator-() const;
-        
+        ~LongNumber() = default;
 };
+
 
 void print_LN(const LongNumber& num);
 LongNumber operator"" _longnum (long double num);
