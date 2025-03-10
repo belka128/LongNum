@@ -28,7 +28,28 @@ int IsTheyEqual(std::vector<char> a, std::vector<char> b){ //Проверка ч
     }
     return 2;
 }
+std::vector<char> AddBinaryVectors(const std::vector<char>& a, const std::vector<char>& b){ //сложение 2 двоичных векторов
+    std::vector<char> result;
+    int carry = 0;
+    int i = a.size()- 1;
+    int j = b.size() - 1;
 
+    while (i >= 0 || j >= 0 || carry) {
+        int sum = carry;
+        if (i >= 0) {
+            sum += a[i];
+            i--;
+        }
+        if (j >= 0) {
+            sum += b[j];
+            j--;
+        }
+        result.push_back(sum % 2);
+        carry = sum / 2;
+    }
+    std::reverse(result.begin(), result.end()); //разворот
+    return result;
+}
 std::vector<char> BinaryInterpritation(std::string num, int accuracy, int &countIntegers){
     countIntegers = 0;
     if (num[0] == '-'){
@@ -357,6 +378,40 @@ LongNumber LongNumber::operator-(const LongNumber& other){
     NotOther.sign = !other.sign;  
     return *this + NotOther;  // Вызываем сложение
 }
+LongNumber LongNumber::operator*(const LongNumber& other){ //точность у Result = 100
+    int lenNum1 = this->BinaryRepresentation.size(); //общая длина в 2ой СС
+    int lenNum2 = other.BinaryRepresentation.size();
+    int lenPrecision1 = lenNum1 - this->CountIntegers; //кол-во цифр в дробной части
+    int lenPrecision2 = lenNum2 - other.CountIntegers;
+    std::vector<char> Result; //умножение целой части
+    int signResult = 0;
+    if (this->sign + other.sign == 1){ 
+        signResult = 1;
+    }
+    int kolvoZapyatix = lenPrecision1 + lenPrecision2; //на скок потом двигать запятую
+    int kolvoZero = 0;
+    for (int i = lenNum1-1; i >= 0; i--){
+        std::vector<char> VectorForProduct;
+        for (int j = lenNum2-1; j >= 0; j--){
+            VectorForProduct.insert(VectorForProduct.begin(), this->BinaryRepresentation[i] * other.BinaryRepresentation[j]);
+        }
+        for (int j = 0; j < kolvoZero; j++){ //Сдвигаем влево каждое слагаемое
+            VectorForProduct.push_back(0);
+        }
+        Result = AddBinaryVectors(Result, VectorForProduct);
+        kolvoZero++;
+    }
+    while (kolvoZapyatix > 100){ //точность 100
+        Result.pop_back();
+        kolvoZapyatix--;
+    }
+    while (Result[0] == 0 && Result.size()-kolvoZapyatix > 1){
+        Result.erase(Result.begin());
+    }
+    return LongNumber(Result, Result.size()-kolvoZapyatix, signResult);
+    
+    
+}
 LongNumber LongNumber::operator=(const LongNumber& other){
     if (this != &other) {
         BinaryRepresentation = other.BinaryRepresentation;
@@ -368,7 +423,7 @@ LongNumber LongNumber::operator=(const LongNumber& other){
 bool LongNumber::operator==(const LongNumber& other) const {
     return sign == other.sign &&
     CountIntegers == other.CountIntegers &&
-    BinaryRepresentation == other.BinaryRepresentation;
+    IsTheyEqual(BinaryRepresentation, other.BinaryRepresentation) == 2;
 }
 bool LongNumber::operator!=(const LongNumber& other) const {
     return !(*this == other);
@@ -441,7 +496,7 @@ void print_LN(const LongNumber& num) { //работает но не для ме�
     if (num.sign == 1){ //Учитываем знак числа
         result = -result;
     }
-    std::cout << "Число в 10-ичной системе: " << std::setprecision(10) << result << std::endl;
+    std::cout << "Число в 10-ичной системе: " << std::setprecision(100) << result << std::endl;
 }
 
 LongNumber operator""_longnum (long double num) { //переводим в строку, точность = 100

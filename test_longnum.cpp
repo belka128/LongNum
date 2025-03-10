@@ -38,6 +38,19 @@ TEST_CASE("Вычитание чисел", "[LongNumber]") {
     REQUIRE(result2 == LongNumber("54.67", 30));
 }
 
+TEST_CASE("Произведение чисел", "[LongNumber]") {
+    LongNumber a("30", 100);
+    LongNumber b("-13", 100);
+    LongNumber result1 = a * b;
+    REQUIRE(result1 == LongNumber("-390", 100));
+
+
+    LongNumber c("0.66", 100);
+    LongNumber d("8", 100);
+    LongNumber result2 = c * d;
+    REQUIRE(result2 == LongNumber("5.28", 99));
+}
+
 TEST_CASE("Отрицание числа", "[LongNumber]") {
     LongNumber a("52", 30);
     LongNumber result1 = -a;

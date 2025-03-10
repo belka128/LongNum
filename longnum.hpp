@@ -9,6 +9,7 @@
 
 int IsTheyEqual(std::vector<char> a, std::vector<char> b);
 std::vector<char> BinaryInterpritation(std::string num, int accuracy, int &countIntegers);
+std::vector<char> AddBinaryVectors(const std::vector<char>& a, const std::vector<char>& b);
 
 class LongNumber {
     private:
@@ -25,6 +26,7 @@ class LongNumber {
 
         LongNumber operator + (const LongNumber& other);
         LongNumber operator - (const LongNumber& other);
+        LongNumber operator * (const LongNumber& other);
         LongNumber operator = (const LongNumber& other);
         bool operator == (const LongNumber& other) const;
         bool operator != (const LongNumber& other) const;
