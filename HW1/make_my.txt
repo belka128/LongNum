@@ -1,0 +1,17 @@
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra -Werror
+
+all: longnum
+
+longnum.o: src/longnum.cpp include/longnum.hpp
+	$(CXX) $(CXXFLAGS) -c src/longnum.cpp -o longnum.o
+
+longnum.a: longnum.o
+	ar rcs longnum.a longnum.o
+
+test: test_longnum.cpp longnum.o
+	$(CXX) $(CXXFLAGS) test_longnum.cpp longnum.o -o test_longnum
+	./test_longnum
+
+clean:
+	rm -f longnum.o longnum.a test_longnum
