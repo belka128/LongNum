@@ -41,6 +41,7 @@ Token Lexer::parseNumber() { // Разбор чисел
         char c = currentChar();
         if (isdigit(c)) {
             numStr += consumeChar();
+            
         } else if (c == '.') {
             if (hasDecimal) break;
             hasDecimal = true;
