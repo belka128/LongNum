@@ -6,7 +6,8 @@
                 "${workspaceFolder}/include",
                 "${workspaceFolder}/include/catch2",
                 "/usr/include",
-                "/usr/local/include"
+                "/usr/local/include",
+                "${workspaceFolder}/catch2"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

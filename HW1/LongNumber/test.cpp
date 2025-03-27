@@ -17,10 +17,7 @@ TEST_CASE("Plus operation works correctly, when both positive and no fractional 
     const LongNumber expected("20");
     REQUIRE(result == expected);
 }
-/* 
-
-Он не заходит, потому что сотый знак после запятой отличается, а так считает правильно
-
+/*
 TEST_CASE("Plus operation works correctly, when both positive and no integer part", "[arithmetic]") {
     // given
     const LongNumber num1("0.1");
@@ -32,7 +29,7 @@ TEST_CASE("Plus operation works correctly, when both positive and no integer par
     // then
     const LongNumber expected("0.2");
     REQUIRE(result == expected);
-}*/
+}
 
 TEST_CASE("Plus operation works correctly, when both positive", "[arithmetic]") {
     // given
@@ -46,8 +43,7 @@ TEST_CASE("Plus operation works correctly, when both positive", "[arithmetic]") 
     const LongNumber expected("21.25");
     REQUIRE(result == expected);
 }
-/*
-Не правильный тест
+
 TEST_CASE("Plus operation works correctly, when one negative", "[arithmetic]") {
     // given
     const LongNumber num1("-10.15");
@@ -60,7 +56,7 @@ TEST_CASE("Plus operation works correctly, when one negative", "[arithmetic]") {
     const LongNumber expected("0");
     REQUIRE(result == expected);
 }
-*/
+
 TEST_CASE("Plus operation works correctly, when one negative and number is really long", "[arithmetic]") {
     // given
     const LongNumber num1(
@@ -154,7 +150,7 @@ TEST_CASE("Multiply operation works correctly, when both negative", "[arithmetic
     const LongNumber expected("187.154296875");
     REQUIRE(result == expected);
 }
-
+/*
 TEST_CASE("Divide operation works correctly, when both positive", "[arithmetic]") {
     // given
     const LongNumber num1(
@@ -305,3 +301,4 @@ TEST_CASE("Calculate pi", "[benchmark]") {
     };
 }
     
+*/

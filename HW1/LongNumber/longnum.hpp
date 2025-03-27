@@ -17,16 +17,18 @@ class LongNumber {
         int CountIntegers; //скок двоичных цифр целой части
         int sign; //Знак: 1 - отрицательное, 0 - положительные
         friend void print_LN(const LongNumber& num);
-    
+        friend LongNumber shiftLeft(const LongNumber &x, int shiftCount);
     public:
         LongNumber();//Если ничего не введут
-        LongNumber(const std::string &num, int accuracy); //Если передается строка
+        LongNumber(const std::string &num); //Если передается онли строка
+        LongNumber(const std::string &num, int accuracy); //Если передается строка + точность
         LongNumber(const std::vector<char> &num, int kolvoIntegers, int sign);
         LongNumber(const LongNumber& other) = default;
 
-        LongNumber operator + (const LongNumber& other);
-        LongNumber operator - (const LongNumber& other);
-        LongNumber operator * (const LongNumber& other);
+        LongNumber operator + (const LongNumber& other) const;
+        LongNumber operator - (const LongNumber& other) const;
+        LongNumber operator * (const LongNumber& other) const;
+        LongNumber operator / (const LongNumber& other) const;
         LongNumber operator = (const LongNumber& other);
         bool operator == (const LongNumber& other) const;
         bool operator != (const LongNumber& other) const;
@@ -35,7 +37,6 @@ class LongNumber {
         LongNumber operator-() const;
         ~LongNumber() = default;
 };
-
 
 void print_LN(const LongNumber& num);
 LongNumber operator"" _longnum (long double num);
